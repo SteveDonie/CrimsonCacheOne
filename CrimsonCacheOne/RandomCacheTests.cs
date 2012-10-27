@@ -37,24 +37,6 @@ namespace CrimsonCacheOne
 			cache.Get(key).ShouldEqual(value);
 		}
 
-		[Test]
-		public void adding_more_items_than_size_should_remove_one_item()
-		{
-			RandomCache cache = new RandomCache(3);
-
-			cache.Add("key1", "value1");
-			cache.Add("key2", "value2");
-			cache.Add("key3", "value3");
-			cache.Add("key4", "value4");
-
-			int itemsInCache = 0;
-			itemsInCache += CountIfExists(cache, "key1");
-			itemsInCache += CountIfExists(cache, "key2");
-			itemsInCache += CountIfExists(cache, "key3");
-			itemsInCache += CountIfExists(cache, "key4");
-			itemsInCache.ShouldEqual(3);
-		}
-
 		// Testing behavior that is supposed to be 'random' is somewhat tricky. What you want to do is 
 		// run a test many times, and ensure that the results can be categorized into different 'buckets'. 
 		// After many runs, each of the buckets should contain approximately the same number of results. 
@@ -120,14 +102,5 @@ namespace CrimsonCacheOne
 			}
 		}
 
-
-		private static int CountIfExists(RandomCache cache, string key)
-		{
-			if (cache.Exists(key))
-			{
-				return 1;
-			}
-			return 0;
-		}
 	}
 }
