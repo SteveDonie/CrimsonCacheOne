@@ -3,13 +3,7 @@
 namespace CrimsonCacheOne
 {
 	/**
-	 * The specs say that the RandomCache should be a subclass of the LRUCache, 
-	 * but that is just a really stupid way to try to design this. The LRU strategy
-	 * is really intrinsic to the implementation of the LRU cache, so to subclass
-	 * it means we will have to override pretty much every method. Even the constructor
-	 * is different. We would have to really create an abstract class, which might as well
-	 * be an interface, because there won't be any implementation in it. 
-	 * 
+	 * The specs say that the RandomCache should be a subclass of the LRUCache.
 	 */
 	public class RandomCache : LRUCache
 	{
@@ -26,20 +20,20 @@ namespace CrimsonCacheOne
 			CacheEntry entry;
 			if (_map.TryGetValue(key, out entry))
 			{
-				remove(entry);
-				Insert(entry);
+				entry.Remove();
+				entry.Insert(_head);
 				entry.Value = value;
 			}
 			else
 			{
 				entry = new CacheEntry(key, value);
 				_map.Add(key, entry);
-				Insert(entry);
+				entry.Insert(_head);
 				if (_map.Count > _size)
 				{
 					CacheEntry randomEntry = FindRandomEntry();
 					_map.Remove(randomEntry.Key);
-					remove(randomEntry);
+					randomEntry.Remove();
 				}
 			}
 

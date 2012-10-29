@@ -34,19 +34,19 @@ namespace CrimsonCacheOne
 			CacheEntry entry;
 			if (_map.TryGetValue(key, out entry))
 			{
-				remove(entry);
-				Insert(entry);
+				entry.Remove();
+				entry.Insert(_head);
 				entry.Value = value;
 			}
 			else
 			{
 				entry = new CacheEntry(key, value);
 				_map.Add(key, entry);
-				Insert(entry);
+				entry.Insert(_head);
 				if (_map.Count > _size)
 				{
 					_map.Remove(_tail.Prev.Key);
-					remove(_tail.Prev);
+					_tail.Prev.Remove();
 				}
 			}
 		}
@@ -62,35 +62,12 @@ namespace CrimsonCacheOne
 			CacheEntry entry;
 			if (_map.TryGetValue(key, out entry))
 			{
-				remove(entry);
-				Insert(entry);
+				entry.Remove();
+				entry.Insert(_head);
 				return entry.Value;
 			}
 			return null;
 		}
-
-
-		/**
-		 * Private methods for maintaining a doubly linked list of CacheEntries.
-		 * 
-		 * Insert puts the given entry into the list just after the head of the list.
-		 */
-
-		protected void Insert(CacheEntry entry)
-		{
-			entry.Prev = _head;
-			entry.Next = _head.Next;
-			entry.Next.Prev = entry;
-			entry.Prev.Next = entry;
-		}
-
-		protected void remove(CacheEntry entry)
-		{
-			entry.Prev.Next = entry.Next;
-			entry.Next.Prev = entry.Prev;
-		}
-
-
 	}
 
 
@@ -106,5 +83,20 @@ namespace CrimsonCacheOne
 		public CacheEntry Prev { get; set; }
 		public Object Key { get; set; }
 		public Object Value { get; set; }
+
+		public void Remove()
+		{
+			Prev.Next = Next;
+			Next.Prev = Prev;
+		}
+
+		public void Insert(CacheEntry head)
+		{
+			Prev = head;
+			Next = head.Next;
+			Next.Prev = this;
+			Prev.Next = this;
+		}
+
 	}
 }
